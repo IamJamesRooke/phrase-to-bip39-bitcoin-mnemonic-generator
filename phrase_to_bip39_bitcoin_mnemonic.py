@@ -45,3 +45,5 @@ if __name__ == "__main__":
         col2 = f"{i + 9}. {words[i + 8]}"
         col3 = f"{i + 17}. {words[i + 16]}"
         print(f"{col1:<20}{col2:<20}{col3:<20}")
+
+    input("Press Enter to exit...")
