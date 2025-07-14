@@ -1,11 +1,13 @@
 # Phrase to BIP-39 Bitcoin Mnemonic Generator
 
-This Python script takes a user-provided phrase, hashes it multiple times using SHA-256, and generates a valid 24-word Bitcoin mnemonic seed phrase using the BIP-39 standard. It also allows converting the mnemonic into a private key.
+This Python script takes a user-provided phrase, hashes it multiple times using SHA-256, and generates a valid 24-word Bitcoin mnemonic seed phrase using the BIP-39 standard. It also allows converting the mnemonic into a private key.  
+**Additionally, it generates a deterministic 6-letter uppercase password derived from your phrase.**
 
 ## Features
 - Converts any input phrase into a secure 24-word Bitcoin mnemonic seed phrase.
 - Hashes the input phrase multiple times (`number_of_hashes` times) for added security.
 - Converts the mnemonic seed phrase into a private key.
+- **Generates a deterministic 6-letter uppercase password from your phrase.**
 
 ## Installation
 
@@ -39,7 +41,7 @@ This Python script takes a user-provided phrase, hashes it multiple times using 
 
 3. The script will output:
    - A 24-word Bitcoin mnemonic seed phrase.
-   - Optionally, you can extend the script to generate a private key from the mnemonic.
+   - A deterministic 6-letter uppercase password.
 
 ## Example Output
 
@@ -56,6 +58,10 @@ Generated 24-word Bitcoin mnemonic seed phrase:
 6. RULE             14. SHOULDER        22. HURT
 7. WISE             15. ESSENCE         23. PROOF
 8. PATCH            16. SESSION         24. MARGIN
+
+Deterministic 6-letter password:
+------------------------------------------------------------
+QWERTY
 ```
 
 ## Configuration
