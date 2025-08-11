@@ -1,58 +1,12 @@
 import hashlib
 from mnemonic import Mnemonic
 import os
-import string  # <-- Add this import
 
 # Version Information
 VERSION = "1.0"
 SCRIPT_NAME = "Phrase2BIP39 Bitcoin Seed Generator"
 
 number_of_hashes = 1000
-
-def phrase_to_mnemonic(phrase: str) -> str:
-    # Step 1: Hash the input phrase using SHA-256 multiple times
-    hashed = phrase.encode('utf-8')
-    for _ in range(number_of_hashes):
-        hashed = hashlib.sha256(hashed).digest()
-
-    # Step 2: Use the final hash to generate a 24-word mnemonic seed phrase
-    mnemo = Mnemonic("english")
-    mnemonic_phrase = mnemo.to_mnemonic(hashed)
-
-    return mnemonic_phrase
-
-def mnemonic_to_private_key(mnemonic: str) -> str:
-    # Step 1: Convert the mnemonic back to entropy
-    mnemo = Mnemonic("english")
-    entropy = mnemo.to_entropy(mnemonic)
-
-    # Step 2: Hash the entropy several times times using SHA-256
-    hashed = entropy
-    for _ in range(number_of_hashes):
-        hashed = hashlib.sha256(hashed).digest()
-
-    # Step 3: Convert the final hash to a hexadecimal private key
-    private_key = hashed.hex()
-    return private_key
-
-def phrase_to_mnemonic_and_password(phrase: str):
-    # Step 1: Hash the input phrase using SHA-256 multiple times
-    hashed = phrase.encode('utf-8')
-    for _ in range(number_of_hashes):
-        hashed = hashlib.sha256(hashed).digest()
-
-    # Step 2: Use the final hash to generate a 24-word mnemonic seed phrase
-    mnemo = Mnemonic("english")
-    mnemonic_phrase = mnemo.to_mnemonic(hashed)
-
-    # Step 3: Generate a deterministic 6-letter uppercase password from the hash
-    alphabet = string.ascii_uppercase
-    password = ""
-    for i in range(6):
-        idx = hashed[i] % len(alphabet)
-        password += alphabet[idx]
-
-    return mnemonic_phrase, password
 
 def generate_duress_passphrase(phrase: str) -> str:
     """
@@ -123,15 +77,21 @@ def phrase_to_duress_wallet(phrase: str):
         phrase (str): The original input phrase
         
     Returns:
-        tuple: (mnemonic_phrase, duress_passphrase, main_password)
+        tuple: (mnemonic_phrase, duress_passphrase)
     """
-    # Generate the main mnemonic and password
-    mnemonic_phrase, main_password = phrase_to_mnemonic_and_password(phrase)
+    # Step 1: Hash the input phrase using SHA-256 multiple times
+    hashed = phrase.encode('utf-8')
+    for _ in range(number_of_hashes):
+        hashed = hashlib.sha256(hashed).digest()
+
+    # Step 2: Use the final hash to generate a 24-word mnemonic seed phrase
+    mnemo = Mnemonic("english")
+    mnemonic_phrase = mnemo.to_mnemonic(hashed)
     
     # Generate the duress passphrase
     duress_passphrase = generate_duress_passphrase(phrase)
     
-    return mnemonic_phrase, duress_passphrase, main_password
+    return mnemonic_phrase, duress_passphrase
 
 def phrase_to_complete_wallet_system(phrase: str):
     """
@@ -141,15 +101,15 @@ def phrase_to_complete_wallet_system(phrase: str):
         phrase (str): The original input phrase
         
     Returns:
-        tuple: (mnemonic_phrase, duress_passphrase, main_password, real_wallet_index, real_wallet_passphrase)
+        tuple: (mnemonic_phrase, duress_passphrase, real_wallet_index, real_wallet_passphrase)
     """
     # Generate the basic components
-    mnemonic_phrase, duress_passphrase, main_password = phrase_to_duress_wallet(phrase)
+    mnemonic_phrase, duress_passphrase = phrase_to_duress_wallet(phrase)
     
     # Generate real wallet credentials
     real_wallet_index, real_wallet_passphrase = generate_real_wallet_credentials(phrase)
     
-    return mnemonic_phrase, duress_passphrase, main_password, real_wallet_index, real_wallet_passphrase
+    return mnemonic_phrase, duress_passphrase, real_wallet_index, real_wallet_passphrase
 
 if __name__ == "__main__":
     # Clear the terminal screen for better UX
@@ -193,7 +153,7 @@ if __name__ == "__main__":
     print("\nGenerating wallet information...")
 
     # Generate complete three-tier wallet system
-    mnemonic_seed, duress_passphrase, main_password, real_wallet_index, real_wallet_passphrase = phrase_to_complete_wallet_system(input_phrase)
+    mnemonic_seed, duress_passphrase, real_wallet_index, real_wallet_passphrase = phrase_to_complete_wallet_system(input_phrase)
 
     print('\n')
     print("=" * 50)
