@@ -3,6 +3,10 @@ from mnemonic import Mnemonic
 import os
 import string  # <-- Add this import
 
+# Version Information
+VERSION = "1.0"
+SCRIPT_NAME = "Phrase2BIP39 Bitcoin Seed Generator"
+
 number_of_hashes = 1000
 
 def phrase_to_mnemonic(phrase: str) -> str:
@@ -151,7 +155,7 @@ if __name__ == "__main__":
     # Clear the terminal screen for better UX
     os.system('cls' if os.name == 'nt' else 'clear')
     print("=" * 50)
-    print("PASSPHRASE TO BITCOIN SEED GENERATOR")
+    print(f"{SCRIPT_NAME} v{VERSION}")
     print("=" * 50)
     print()
     print("This tool converts any memorable phrase into Bitcoin")
