@@ -3,7 +3,7 @@ from mnemonic import Mnemonic
 import os
 
 # Version Information
-VERSION = "1.0"
+VERSION = "1.0.1"
 SCRIPT_NAME = "Phrase2BIP39 Bitcoin Seed Generator"
 
 number_of_hashes = 1000

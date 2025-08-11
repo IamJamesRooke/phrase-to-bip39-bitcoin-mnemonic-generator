@@ -1,4 +1,4 @@
-# Phrase2BIP39 Bitcoin Seed Generator v1.0
+# Phrase2BIP39 Bitcoin Seed Generator v1.0.1
 
 A deterministic Bitcoin wallet generator that creates a three-tier security system from a single memorable phrase. Uses the same 24-word seed with different passphrases to create completely different wallets for maximum security through deception.
 

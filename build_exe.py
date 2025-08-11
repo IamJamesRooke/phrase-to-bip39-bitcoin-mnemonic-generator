@@ -5,7 +5,7 @@ import sys
 import shutil
 
 # Version Information
-VERSION = "1.0"
+VERSION = "1.0.1"
 SCRIPT_NAME = "Phrase2BIP39 Executable Builder"
 
 def clean_directories(script_dir):
