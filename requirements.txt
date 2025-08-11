@@ -1,1 +1,2 @@
-mnemonic
+mnemonic>=0.20
+pyinstaller>=6.0
