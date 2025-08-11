@@ -207,53 +207,61 @@ const BIP39_WORDLIST = [
     "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
 ];
 
-// Proper BIP39 mnemonic generation for 24 words (256 bits entropy)
+// Proper BIP39 mnemonic generation that matches Python's mnemonic library exactly
 function generateMnemonicFromEntropy(entropyHex) {
     // Validate entropy length (should be 64 hex characters = 32 bytes = 256 bits for 24 words)
     if (entropyHex.length !== 64) {
         throw new Error(`Invalid entropy length: ${entropyHex.length}. Expected 64 hex characters for 24-word mnemonic.`);
     }
     
-    // Convert hex to binary
-    let entropyBinary = '';
-    for (let i = 0; i < entropyHex.length; i += 2) {
-        const byte = parseInt(entropyHex.substr(i, 2), 16);
-        entropyBinary += byte.toString(2).padStart(8, '0');
-    }
-    
-    // Calculate checksum (first 8 bits of SHA256 hash of entropy)
+    // Convert hex to bytes
     const entropyBytes = [];
     for (let i = 0; i < entropyHex.length; i += 2) {
         entropyBytes.push(parseInt(entropyHex.substr(i, 2), 16));
     }
     
-    // Simple checksum calculation (use first byte of original entropy as checksum for simplicity)
-    const checksumByte = entropyBytes[0];
-    const checksumBinary = checksumByte.toString(2).padStart(8, '0');
+    // Convert entropy to binary
+    let entropyBinary = '';
+    for (let i = 0; i < entropyBytes.length; i++) {
+        entropyBinary += entropyBytes[i].toString(2).padStart(8, '0');
+    }
     
-    // Combine entropy + checksum
-    const fullBinary = entropyBinary + checksumBinary;
+    // Calculate SHA256 checksum of entropy bytes
+    const entropyWordArray = CryptoJS.lib.WordArray.create(entropyBytes);
+    const checksumHash = CryptoJS.SHA256(entropyWordArray);
+    const checksumBytes = [];
+    for (let i = 0; i < 4; i++) { // Only need first 4 bytes for checksum
+        checksumBytes.push((checksumHash.words[i] >>> 24) & 0xff);
+        checksumBytes.push((checksumHash.words[i] >>> 16) & 0xff);
+        checksumBytes.push((checksumHash.words[i] >>> 8) & 0xff);
+        checksumBytes.push(checksumHash.words[i] & 0xff);
+    }
     
-    // Split into 11-bit groups for word selection
+    // Take first 8 bits (1 byte) of checksum for 256-bit entropy
+    const checksumBits = checksumBytes[0].toString(2).padStart(8, '0');
+    
+    // Combine entropy + checksum = 256 + 8 = 264 bits
+    const fullBinary = entropyBinary + checksumBits;
+    
+    // Split into 11-bit groups for word indices (264 ÷ 11 = 24 words)
     const words = [];
-    for (let i = 0; i < fullBinary.length; i += 11) {
+    for (let i = 0; i < 264; i += 11) {
         const group = fullBinary.substr(i, 11);
         if (group.length === 11) {
-            const wordIndex = parseInt(group, 2) % BIP39_WORDLIST.length;
-            words.push(BIP39_WORDLIST[wordIndex]);
+            const wordIndex = parseInt(group, 2);
+            // Ensure index is within valid range
+            if (wordIndex < BIP39_WORDLIST.length) {
+                words.push(BIP39_WORDLIST[wordIndex]);
+            }
         }
     }
     
     // Should have exactly 24 words
     if (words.length !== 24) {
-        // Pad with additional words if needed
-        while (words.length < 24) {
-            const index = Math.floor(Math.random() * BIP39_WORDLIST.length);
-            words.push(BIP39_WORDLIST[index]);
-        }
+        throw new Error(`Invalid word count: ${words.length}. Expected 24 words.`);
     }
     
-    return words.slice(0, 24).join(' ');
+    return words.join(' ');
 }
 
 // Create a proper BIP39 object for compatibility
