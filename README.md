@@ -1,207 +1,138 @@
-# Phrase2BIP39 Bitcoin Seed Generator v1.0.1
+# 🧡 Phrase2BIP39 Bitcoin Seed Generator
 
-A deterministic Bitcoin wallet generator that creates a three-tier security system from a si## 📁 Files
+**Convert any memorable phrase into a 3-tier Bitcoin wallet system for maximum security.**
 
-### **Root Directory:**
-- `phrase2bip39.html` - **Web version** - works on any device with browser
-- `WEB-README.md` - Documentation for web version
-- `README.md` - This main documentation
-- `requirements.txt` - Python dependencies
+## 🎯 Overview
 
-### **Python Version (`python-version/` folder):**
-- `phrase2bip39.py` - Original Python script with step-by-step wallet generation
-- `phrase2BIP39.exe` - Pre-built Windows executable (no Python required)
-- `build_exe.py` - Script to build your own executable with PyInstaller
+This tool transforms a single memorable phrase into three Bitcoin wallets with different security levels:
 
-## 🌟 **Which Version Should You Use?**
+- **Wallet 1**: Basic (24 words + no passphrase)
+- **Wallet 2**: Decoy (24 words + 1-word passphrase) 
+- **Wallet 3**: Vault (24 words + 3-word passphrase + account number)
 
-| Use Case | Recommended Version |
-|----------|-------------------|
-| **Mobile demos for Bitcoin groups** | 📱 **Web Version** |
-| **Sharing with non-technical users** | 📱 **Web Version** |
-| **Personal use on Windows** | 💻 **Python Executable** |
-| **Development/Scripting** | 💻 **Python Script** |
-| **Maximum compatibility** | 📱 **Web Version** |
+**Key Concept**: Same 24 words + different passphrases = completely different wallets!
 
-**Both versions produce identical results** - same cryptographic security!rase. Uses the same 24-word seed with different passphrases to create completely different wallets for maximum security through deception.
+## 🔐 Security Through Deception
 
-## 🚀 Quick Start - Choose Your Version:
+If compromised, attackers find Wallets #1 and #2 and think that's everything. The real wealth stays hidden in Wallet #3 with **860+ billion possible combinations**.
 
-### 📱 **Web Version (Recommended for Mobile)**
-**Perfect for demos and sharing with non-technical users!**
-- ✅ **Single HTML file** - works on ANY device with a browser
-- ✅ **No installation required** - just open and use
-- ✅ **Mobile-optimized** - perfect for phone demonstrations
-- ✅ **Share via email/link** - recipients just click and use
+## 🚀 Quick Start
 
-**How to use:** Open `phrase2bip39.html` in any browser
+### Web Version (Recommended)
+1. Navigate to `web-version/` folder
+2. Open `index.html` in any browser
+3. Generate your 3-tier wallet system
+4. Follow the step-by-step instructions
 
-### 💻 **Python Version (For Developers)**
-**Full-featured command-line version with Windows executable**
-- ✅ **Python script** - for developers and scripting
-- ✅ **Windows executable** - no Python installation needed
-- ✅ **Build your own** - includes build script
-
-**Location:** All Python files are in `python-version/` folder
-
-## 🔑 Key Features
-
-- **One Phrase, Multiple Wallets**: Generate 3 different Bitcoin wallets from one memorable phrase
-- **Plausible Deniability**: Duress wallet system protects your main funds under coercion
-- **Deterministic**: Same phrase always generates the same wallets - no randomness
-- **BIP-39 Compliant**: Uses standard Bitcoin seed phrase format
-- **Educational Interface**: Step-by-step instructions for non-technical users
-- **Bitcoin Selling Guide**: Instructions for converting Bitcoin to fiat via P2P exchanges
-- **Security Warnings**: ColdCard recommendations and keylogger protection advice
-
-## 🛡️ Security Model
-
-The system creates three wallets with escalating security:
-
-1. **Wallet #1 (Basic)**: Same seed + NO passphrase
-   - Found immediately by anyone with your phrase
-   - Keep small amounts for believability
-
-2. **Wallet #2 (Decoy)**: Same seed + 1-word passphrase  
-   - Found by smart attackers (2,048 combinations)
-   - Keep moderate funds - your "main savings" performance
-
-3. **Wallet #3 (Main Vault)**: Same seed + 3-word passphrase + account number
-   - 860+ billion combinations (virtually impossible to find)
-   - Your actual Bitcoin wealth stays hidden
-
-## 📋 Requirements
-
-- Python 3.6 or higher
-- `mnemonic` library for BIP-39 functionality
-
-## 🚀 Installation
-
-### 📱 **Web Version (Zero Setup)**
-1. **Download or open `phrase2bip39.html`**
-2. **That's it!** Works in any browser on any device
-
-### 💻 **Python Version**
-1. **Navigate to `python-version/` folder**
-2. **Option A: Use the pre-built executable**
-   - Run `phrase2BIP39.exe` (Windows only)
-   - No Python installation required
-
-3. **Option B: Run from Python source**
-   - Install Python dependencies: `pip install -r requirements.txt`
-   - Run: `python phrase2bip39.py`
-
-4. **Option C: Build your own executable**
-   ```bash
-   python build_exe.py
-   ```
-
-## 💻 Usage
-
-### 📱 **Web Version**
-1. **Open `phrase2bip39.html`** in any browser (Chrome, Safari, Firefox, etc.)
-2. **Enter your memorable phrase** in the input field
-3. **Click "Generate Bitcoin Wallets"**
-4. **Follow the step-by-step guide** that appears
-5. **Perfect for mobile demos** - share the HTML file with anyone!
-
-### 💻 **Python Version**
+### Python Version (Advanced Users)
 ```bash
-cd python-version/
+cd python-version
 python phrase2bip39.py
-# Follow the interactive prompts
 ```
 
-### 🎯 **Example Session**
-1. Enter: `coffee shop on main street`
-2. Get your 24-word seed phrase
-3. Follow the 12-step guided process
-4. Create your three Bitcoin wallets in Sparrow
+### For WhatsApp/Telegram Sharing
+1. Zip the `web-version/` folder
+2. Share the zip file with your group
+3. Recipients extract and open `index.html`
+4. Works on any device - no installation needed!
 
-## 📖 How It Works
+## 📁 Project Structure
 
-1. **Enter your memorable phrase** - something you'll never forget
-2. **Get 24-word seed** - generated deterministically from your phrase
-3. **Create 3 wallets** in Sparrow using the SAME 24 words but different passphrases:
-   - Wallet 1: No passphrase
-   - Wallet 2: Generated 1-word passphrase
-   - Wallet 3: Generated 3-word passphrase + account number
+```
+phrase2bip39/
+├── web-version/        # Standalone web app for sharing
+│   ├── index.html      # Modern web interface
+│   ├── styles.css      # Bitcoin-themed styling  
+│   ├── script.js       # Core wallet generation logic
+│   ├── bip39-simple.js # Local BIP39 implementation
+│   └── README.md       # Web version guide
+├── python-version/     # Original Python implementation
+│   ├── phrase2bip39.py
+│   ├── build_exe.py
+│   └── phrase2BIP39.exe
+└── README.md           # This file
+```
 
-## 🔒 Security Best Practices
+## 🎨 Features
 
-### ✅ DO:
-- Keep 24 words written on paper in safe place
-- Test with small amounts first
-- Choose memorable but private phrases
-- Practice the 'under duress' scenario
-- Keep some funds in Wallets #1 and #2 (make decoys believable)
-- Act stressed when 'giving up' Wallet #2
+### Web Version
+- ✅ **Modern Bitcoin-themed UI** with gold/orange gradients
+- ✅ **Mobile responsive** design for demonstrations  
+- ✅ **3-column word layout** (1-8, 9-16, 17-24)
+- ✅ **No external dependencies** - works offline
+- ✅ **Identical cryptographic results** to Python version
 
-### ❌ DON'T:
-- Photo the 24 words
-- Store 24 words digitally
-- Try to memorize 3-word passwords
-- Share your memorable phrase
-- Keep all wallets empty
-- Mention 'multiple wallets' to anyone
-- Use obvious phrases others might guess
+### Python Version  
+- ✅ **Command-line interface** with detailed instructions
+- ✅ **Windows executable** generation via [PyInstaller](https://pyinstaller.org/)
+- ✅ **Complete step-by-step guidance** for [Sparrow Wallet](https://sparrowwallet.com/)
+- ✅ **Advanced security recommendations**
 
-## ⚠️ Important Security Notes
+## 🔧 How It Works
 
-- **Under duress**: Give ONLY your memorable phrase. They'll find Wallets #1 and #2.
-- **Never reveal**: The 3-word passphrase, account number, or that Wallet #3 exists.
-- **After compromise**: Move ALL funds to new wallets with a new phrase.
-- **Sparrow warning**: Only use the official sparrowwallet.com site - fake sites steal Bitcoin!
+1. **Input**: Any memorable phrase (e.g., "my dog loves treats")
+2. **Processing**: 
+   - [SHA-256](https://en.wikipedia.org/wiki/SHA-2) hashing (1000 iterations for mnemonic)
+   - [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) standard word selection
+   - Deterministic wallet generation
+3. **Output**: 
+   - 24-word mnemonic seed
+   - Duress passphrase (1 word, intentionally weak)
+   - Real passphrase (3 words + account number)
 
-## 🛠️ Technical Details
+## 🎯 Usage Examples
 
-- **Hashing**: SHA-256 with different iteration counts for each wallet type
-- **Word List**: Standard BIP-39 English wordlist (2,048 words)
-- **Combinations**:
-  - Wallet 2: 2,048 combinations (intentionally weak)
-  - Wallet 3: 860+ billion combinations (8.6B passphrases × 100 accounts)
+### For Bitcoin Groups/Demonstrations
+Share the web version link for educational purposes. Works on any smartphone or tablet with no installation required, making it perfect for teaching Bitcoin security concepts at meetups and conferences.
 
-## 📁 Files
+### For Personal Use
+Use the Python version for maximum security when generating wallets for actual storage. Generate on an air-gapped computer, write everything on paper, and never store the results digitally.
 
-- `phrase2bip39.py` - Main program with step-by-step wallet generation (v1.0)
-- `phrase2BIP39.exe` - Pre-built executable (no Python required)
-- `build_exe.py` - Script to build your own executable with PyInstaller
-- `requirements.txt` - Python dependencies
-- `README.md` - This documentation
+## 🛡️ Security Features
 
-## 🔧 Building Executable
+- **Deterministic**: Same phrase always generates same wallets
+- **Cryptographically secure**: [SHA-256](https://en.wikipedia.org/wiki/SHA-2) + [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) standards
+- **Plausible deniability**: Hidden wallet appears non-existent
+- **Brute-force resistant**: 860+ billion combinations for Wallet #3
 
-To create your own standalone executable:
+## ⚠️ Security Warnings
 
-1. Install PyInstaller: `pip install pyinstaller`
-2. Run the builder: `python build_exe.py`
-3. Find your executable in the root folder: `phrase2BIP39.exe`
+**Never** store your phrase digitally or photograph the 24 words. Write everything on paper and store securely in multiple locations. **Test with small amounts** first before committing significant funds. **Use hardware wallets** like [Coldcard](https://coldcard.com/) or [Trezor](https://trezor.io/) for large amounts.
 
-The build script automatically cleans up temporary files for a clean setup.
+## 🔄 Version Compatibility
 
-## 🤝 Use Cases
+Both Python and JavaScript versions produce **identical results**. The same input phrase generates the same 24-word mnemonic, duress passphrase, and real wallet credentials across both implementations.
 
-- **Emergency recovery**: Give instructions to family/partners for Bitcoin access
-- **Inheritance planning**: Simple phrase-based access to funds
-- **Security through deception**: Protect wealth from coercion/theft
-- **Simplified backup**: One phrase instead of multiple complex passwords
+## 📱 Mobile Deployment
 
-## ⚖️ Legal & Responsibility
+The web version is perfect for mobile Bitcoin group demonstrations. Simply zip the `web-version/` folder and share via [WhatsApp](https://whatsapp.com/), [Telegram](https://telegram.org/), or any messaging platform. Recipients extract and open `index.html` - it works seamlessly on iOS, Android, and desktop without requiring any app installations.
 
-This tool is for educational and personal security purposes. Users are responsible for:
-- Keeping their memorable phrases secure
-- Understanding Bitcoin wallet security
-- Complying with local laws regarding cryptocurrency
-- Testing with small amounts before storing significant funds
+## 🏗️ Development
 
-## 🆘 Support
+### Requirements
+- **Web**: Any modern browser with JavaScript
+- **Python**: Python 3.6+ with [`mnemonic`](https://pypi.org/project/mnemonic/) library
 
-If you need help:
-1. Check this README for common issues
-2. Ensure Python and dependencies are properly installed
-3. Verify you're using the correct Sparrow Wallet website
-4. Test with small amounts first
+### Building
+```bash
+# Python executable (Windows)
+cd python-version
+python build_exe.py
+```
+
+## 📄 License
+
+MIT License - Use responsibly for educational purposes.
+
+## ⚡ Quick Test
+
+Try with phrase: `Hello world!`
+
+Expected results:
+- **Duress passphrase**: `crisp`
+- **Real passphrase**: `promote double only` 
+- **Account**: `80`
 
 ---
 
-**Remember**: Your memorable phrase is your master key to everything. Choose wisely and keep it safe!
+**🧡 Remember: Your phrase is your master key to everything. Keep it safe!**

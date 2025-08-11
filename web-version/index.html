@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phrase2BIP39 Bitcoin Seed Generator v1.1.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Phrase2BIP39 Bitcoin Seed Generator v1.1.0</h1>
+            <p>Convert any memorable phrase into Bitcoin wallet seeds</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title">🔑 Key Concept</div>
+            <p>This tool converts any memorable phrase into Bitcoin wallet seeds. The purpose: <span class="important">ONE phrase generates everything</span> you need - no need to memorize multiple passwords, seed phrases, or account numbers.</p>
+            <p><span class="important">KEY CONCEPT:</span> Same 24 words + different passphrases = completely different wallets!</p>
+            <p>It creates 3 wallets with different security levels:</p>
+            <ul>
+                <li>Wallet 1: Same seed + NO passphrase</li>
+                <li>Wallet 2: Same seed + 1-word passphrase</li>
+                <li>Wallet 3: Same seed + 3-word passphrase + account</li>
+            </ul>
+            <p><span class="warning">Why 3 wallets? Security through deception.</span></p>
+            <p>If anyone forces access, they find the first two and think that's everything. The real wealth stays hidden in wallet 3.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title">STEP 1: ENTER YOUR MEMORABLE PHRASE</div>
+            <p>Enter any phrase you can always remember:</p>
+            <p>Examples:</p>
+            <ul>
+                <li>'my dog max loves treats'</li>
+                <li>'pizza friday movie night'</li>
+                <li>'coffee shop on main street'</li>
+            </ul>
+            <input type="text" id="inputPhrase" placeholder="Enter your memorable phrase here..." />
+            <button onclick="generateWallets()">Generate Bitcoin Wallets</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <div class="step">
+                <div class="step-title">STEP 2: WRITE DOWN 24 WORDS</div>
+                <p><span class="warning">These words control all wallets. Write on paper!</span></p>
+                <p><span class="important">IMPORTANT:</span> All 3 wallets use these SAME 24 words. Only the passphrase changes to create different wallets.</p>
+                <div id="mnemonicWords" class="words-grid"></div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 3: DOWNLOAD SPARROW WALLET</div>
+                <div class="instruction-block">
+                    <div class="instruction-header">Official Download Only</div>
+                    <p><span class="warning">⚠️ WARNING: Only use the official site!</span></p>
+                    <p>There are fake Sparrow sites that steal Bitcoin.</p>
+                    <ol>
+                        <li>Go to: <strong><a href="https://sparrowwallet.com" target="_blank" rel="noopener noreferrer" class="service-link">sparrowwallet.com</a></strong> (check spelling!)</li>
+                        <li>Download and install</li>
+                        <li>Open the program</li>
+                    </ol>
+                    <p>This is free Bitcoin software for managing wallets.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 4: CREATE WALLET #1 (BASIC)</div>
+                <div class="wallet-step">
+                    <h4>Basic Wallet Setup</h4>
+                    <p>This wallet uses the 24 words + NO passphrase. Anyone with your phrase finds this first.</p>
+                </div>
+                <div class="instruction-block">
+                    <div class="instruction-header">Sparrow Wallet Steps</div>
+                    <ol>
+                        <li>Sparrow: File > New Wallet</li>
+                        <li>Name: 'Bitcoin Wallet'</li>
+                        <li>Choose: New or Imported Software Wallet</li>
+                        <li>Select: Use 24 Words</li>
+                        <li>Import Existing Mnemonic</li>
+                        <li>Type your 24 words from Step 2</li>
+                        <li>Passphrase: <span class="important">LEAVE EMPTY</span></li>
+                        <li>Create Wallet</li>
+                    </ol>
+                    <p>This wallet shows your basic holdings.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 5: CREATE WALLET #2 (DECOY)</div>
+                <div class="wallet-step">
+                    <h4>Decoy Wallet Setup</h4>
+                    <p>This uses the SAME 24 words + 1-word passphrase. Smart attackers find this by trying BIP-39 words.</p>
+                </div>
+                <div class="instruction-block">
+                    <div class="instruction-header">Sparrow Wallet Steps</div>
+                    <ol>
+                        <li>Sparrow: File > New Wallet</li>
+                        <li>Name: 'Savings'</li>
+                        <li>Choose: New or Imported Software Wallet</li>
+                        <li>Select: Use 24 Words</li>
+                        <li>Import Existing Mnemonic</li>
+                        <li>Type SAME 24 words from Step 2</li>
+                        <li>Passphrase: <span id="duressPass" class="important"></span></li>
+                        <li>Create Wallet</li>
+                    </ol>
+                </div>
+                <div class="results">
+                    <p><span class="important">SAVE WALLET #2 DETAILS:</span></p>
+                    <p>Passphrase: <span id="duressPassSave" class="success"></span></p>
+                    <p>This 1-word password is <span class="warning">INTENTIONALLY weak</span>. Smart attackers can find it by trying all 2,048 BIP-39 words. That's the point - they find this decoy wallet and think they're done!</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 6: CREATE WALLET #3 (MAIN VAULT)</div>
+                <div class="wallet-step">
+                    <h4>Main Vault Setup</h4>
+                    <p>This uses the SAME 24 words + 3-word passphrase + account number. <span class="important">Maximum security combination!</span></p>
+                </div>
+                <div class="instruction-block">
+                    <div class="instruction-header">Sparrow Wallet Steps</div>
+                    <ol>
+                        <li>Sparrow: File > New Wallet</li>
+                        <li>Name: 'Main'</li>
+                        <li>Choose: New or Imported Software Wallet</li>
+                        <li>Select: Use 24 Words</li>
+                        <li>Import Existing Mnemonic</li>
+                        <li>Type SAME 24 words from Step 2</li>
+                        <li>Passphrase: <span id="realPass" class="important"></span></li>
+                        <li>Advanced Options</li>
+                        <li>Account: <span id="realAccount" class="important"></span> (this creates a different wallet path)</li>
+                        <li>Create Wallet</li>
+                    </ol>
+                </div>
+                <div class="results">
+                    <p><span class="important">SAVE WALLET #3 DETAILS:</span></p>
+                    <p>Passphrase: <span id="realPassSave" class="success"></span></p>
+                    <p>Account: <span id="realAccountSave" class="success"></span></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 7: HOW TO USE WALLETS</div>
+                <p><span class="important">SEND BITCOIN:</span></p>
+                <ol>
+                    <li>Open wallet > Send tab</li>
+                    <li>Paste destination address</li>
+                    <li>Enter amount</li>
+                    <li>Create Transaction > Broadcast</li>
+                </ol>
+                
+                <p><span class="important">RECEIVE BITCOIN:</span></p>
+                <ol>
+                    <li>Open wallet > Receive tab</li>
+                    <li>Copy the address</li>
+                    <li>Give address to sender</li>
+                </ol>
+                
+                <p><span class="important">CHECK BALANCE:</span></p>
+                <ul>
+                    <li>Balance shows on main screen</li>
+                    <li>Transactions take 10-60 minutes</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 8: SELLING BITCOIN & SECURITY</div>
+                <p><span class="important">SELLING BITCOIN FOR FIAT CURRENCY:</span></p>
+                
+                <p><span class="success">Option 1: Reputable Wallet Services</span></p>
+                <ul>
+                    <li><a href="https://strike.me" target="_blank" rel="noopener noreferrer" class="service-link">Strike</a>: strike.me (US, El Salvador)</li>
+                    <li><a href="https://walletofsatoshi.com" target="_blank" rel="noopener noreferrer" class="service-link">Wallet of Satoshi</a>: walletofsatoshi.com</li>
+                    <li>Send small test amount first</li>
+                    <li>These services can convert to local currency</li>
+                </ul>
+                
+                <p><span class="success">Option 2: P2P Exchanges</span></p>
+                <ul>
+                    <li>OrdenesP2P on Telegram (Colombian Pesos)</li>
+                    <li><a href="https://localbitcoins.com" target="_blank" rel="noopener noreferrer" class="service-link">LocalBitcoins</a>, <a href="https://bisq.network" target="_blank" rel="noopener noreferrer" class="service-link">Bisq</a>, <a href="https://hodlhodl.com" target="_blank" rel="noopener noreferrer" class="service-link">HodlHodl</a></li>
+                    <li>Trade directly with other people</li>
+                    <li>Always use escrow services</li>
+                    <li>Meet in public places for cash trades</li>
+                </ul>
+                
+                <p><span class="warning">⚠️  COMPUTER SECURITY WARNING:</span></p>
+                
+                <p><span class="warning">KEYLOGGER RISK:</span></p>
+                <ul>
+                    <li>Hackers can record every keystroke</li>
+                    <li>They can see passwords as you type them</li>
+                    <li>They can capture screenshots of your screen</li>
+                    <li>Your computer may be compromised without you knowing</li>
+                </ul>
+                
+                <p><span class="important">FOR HIGH-VALUE AMOUNTS:</span></p>
+                <ul>
+                    <li>Use <a href="https://coldcard.com" target="_blank" rel="noopener noreferrer" class="service-link">ColdCard</a> hardware wallet (coldcard.com)</li>
+                    <li>Air-gapped device = never connects to internet</li>
+                    <li>Sign transactions offline, transfer via SD card</li>
+                    <li>Eliminates keylogger/malware risk completely</li>
+                    <li>Worth the cost for serious Bitcoin storage</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 9: IF COMPROMISED</div>
+                <p><span class="warning">IF SOMEONE FORCES ACCESS:</span></p>
+                <ol>
+                    <li>Give them ONLY your 24 words.</li>
+                    <li>They find Wallet #1 (basic, low funds)</li>
+                    <li>Smart ones find Wallet #2 (duress, more funds)</li>
+                    <li>They think that's everything and leave</li>
+                </ol>
+                
+                <p><span class="warning">NEVER TELL THEM:</span></p>
+                <ul>
+                    <li>3-word password: <span id="compromisePass"></span></li>
+                    <li>Account number: <span id="compromiseAccount"></span></li>
+                    <li>That there's a 3rd wallet with the real funds.</li>
+                </ul>
+                
+                <p><span class="warning">⚠️ CRITICAL:</span> They must never even SUSPECT that Wallet #3 exists. Act like Wallet #2 is your main savings. Sell the performance!</p>
+                
+                <p>Wallet #3 has <span class="important">860+ BILLION password combinations</span> (8.6B passphrases × 100 accounts = 860B total). They'll never find it without the exact details!</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🎉 COMPLETE!</div>
+                <p class="success">You now have deterministic access to 3 Bitcoin wallets, all generated from your one memorable phrase. Your phrase is your master key to everything - keep it safe!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- External libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="bip39-simple.js"></script>
+    
+    <!-- Our custom script -->
+    <script src="script.js"></script>
+</body>
+</html>
