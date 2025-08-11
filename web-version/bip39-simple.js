@@ -207,56 +207,61 @@ const BIP39_WORDLIST = [
     "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
 ];
 
-// Proper BIP39 mnemonic generation that matches Python's mnemonic library exactly
+// Exact replication of Python's mnemonic.to_mnemonic() algorithm
 function generateMnemonicFromEntropy(entropyHex) {
     // Validate entropy length (should be 64 hex characters = 32 bytes = 256 bits for 24 words)
     if (entropyHex.length !== 64) {
         throw new Error(`Invalid entropy length: ${entropyHex.length}. Expected 64 hex characters for 24-word mnemonic.`);
     }
     
-    // Convert hex to bytes
+    // Convert hex string to bytes array
     const entropyBytes = [];
     for (let i = 0; i < entropyHex.length; i += 2) {
-        entropyBytes.push(parseInt(entropyHex.substr(i, 2), 16));
+        entropyBytes.push(parseInt(entropyHex.substring(i, i + 2), 16));
     }
     
-    // Convert entropy to binary
+    // Step 1: Convert entropy bytes to big-endian binary string
+    // This matches: bin(int.from_bytes(data, byteorder="big"))[2:].zfill(len(data) * 8)
     let entropyBinary = '';
     for (let i = 0; i < entropyBytes.length; i++) {
         entropyBinary += entropyBytes[i].toString(2).padStart(8, '0');
     }
     
-    // Calculate SHA256 checksum of entropy bytes
-    const entropyWordArray = CryptoJS.lib.WordArray.create(entropyBytes);
+    // Step 2: Calculate SHA256 checksum of entropy bytes
+    // This matches: hashlib.sha256(data).hexdigest()
+    const entropyWordArray = CryptoJS.enc.Hex.parse(entropyHex);
     const checksumHash = CryptoJS.SHA256(entropyWordArray);
-    const checksumBytes = [];
-    for (let i = 0; i < 4; i++) { // Only need first 4 bytes for checksum
-        checksumBytes.push((checksumHash.words[i] >>> 24) & 0xff);
-        checksumBytes.push((checksumHash.words[i] >>> 16) & 0xff);
-        checksumBytes.push((checksumHash.words[i] >>> 8) & 0xff);
-        checksumBytes.push(checksumHash.words[i] & 0xff);
-    }
+    const checksumHex = checksumHash.toString(CryptoJS.enc.Hex);
     
-    // Take first 8 bits (1 byte) of checksum for 256-bit entropy
-    const checksumBits = checksumBytes[0].toString(2).padStart(8, '0');
+    // Step 3: Convert checksum to binary and take first len(data) * 8 // 32 bits
+    // For 32 bytes: 32 * 8 // 32 = 8 bits
+    const checksumBinary = parseInt(checksumHex.substring(0, 2), 16).toString(2).padStart(8, '0');
     
-    // Combine entropy + checksum = 256 + 8 = 264 bits
-    const fullBinary = entropyBinary + checksumBits;
+    // Step 4: Combine entropy + checksum
+    // This matches: entropy_binary + checksum_bits
+    const fullBinary = entropyBinary + checksumBinary;
     
-    // Split into 11-bit groups for word indices (264 ÷ 11 = 24 words)
+    // Step 5: Split into 11-bit groups and convert to words
+    // This matches: for i in range(len(b) // 11): idx = int(b[i * 11 : (i + 1) * 11], 2)
     const words = [];
-    for (let i = 0; i < 264; i += 11) {
-        const group = fullBinary.substr(i, 11);
-        if (group.length === 11) {
-            const wordIndex = parseInt(group, 2);
-            // Ensure index is within valid range
+    const totalWords = Math.floor(fullBinary.length / 11);
+    
+    for (let i = 0; i < totalWords; i++) {
+        const startPos = i * 11;
+        const endPos = startPos + 11;
+        const binaryChunk = fullBinary.substring(startPos, endPos);
+        
+        if (binaryChunk.length === 11) {
+            const wordIndex = parseInt(binaryChunk, 2);
             if (wordIndex < BIP39_WORDLIST.length) {
                 words.push(BIP39_WORDLIST[wordIndex]);
+            } else {
+                throw new Error(`Word index ${wordIndex} out of range for word ${i + 1}`);
             }
         }
     }
     
-    // Should have exactly 24 words
+    // Should have exactly 24 words for 32-byte entropy
     if (words.length !== 24) {
         throw new Error(`Invalid word count: ${words.length}. Expected 24 words.`);
     }
