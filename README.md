@@ -1,6 +1,48 @@
 # Phrase2BIP39 Bitcoin Seed Generator v1.0.1
 
-A deterministic Bitcoin wallet generator that creates a three-tier security system from a single memorable phrase. Uses the same 24-word seed with different passphrases to create completely different wallets for maximum security through deception.
+A deterministic Bitcoin wallet generator that creates a three-tier security system from a si## 📁 Files
+
+### **Root Directory:**
+- `phrase2bip39.html` - **Web version** - works on any device with browser
+- `WEB-README.md` - Documentation for web version
+- `README.md` - This main documentation
+- `requirements.txt` - Python dependencies
+
+### **Python Version (`python-version/` folder):**
+- `phrase2bip39.py` - Original Python script with step-by-step wallet generation
+- `phrase2BIP39.exe` - Pre-built Windows executable (no Python required)
+- `build_exe.py` - Script to build your own executable with PyInstaller
+
+## 🌟 **Which Version Should You Use?**
+
+| Use Case | Recommended Version |
+|----------|-------------------|
+| **Mobile demos for Bitcoin groups** | 📱 **Web Version** |
+| **Sharing with non-technical users** | 📱 **Web Version** |
+| **Personal use on Windows** | 💻 **Python Executable** |
+| **Development/Scripting** | 💻 **Python Script** |
+| **Maximum compatibility** | 📱 **Web Version** |
+
+**Both versions produce identical results** - same cryptographic security!rase. Uses the same 24-word seed with different passphrases to create completely different wallets for maximum security through deception.
+
+## 🚀 Quick Start - Choose Your Version:
+
+### 📱 **Web Version (Recommended for Mobile)**
+**Perfect for demos and sharing with non-technical users!**
+- ✅ **Single HTML file** - works on ANY device with a browser
+- ✅ **No installation required** - just open and use
+- ✅ **Mobile-optimized** - perfect for phone demonstrations
+- ✅ **Share via email/link** - recipients just click and use
+
+**How to use:** Open `phrase2bip39.html` in any browser
+
+### 💻 **Python Version (For Developers)**
+**Full-featured command-line version with Windows executable**
+- ✅ **Python script** - for developers and scripting
+- ✅ **Windows executable** - no Python installation needed
+- ✅ **Build your own** - includes build script
+
+**Location:** All Python files are in `python-version/` folder
 
 ## 🔑 Key Features
 
@@ -35,49 +77,44 @@ The system creates three wallets with escalating security:
 
 ## 🚀 Installation
 
-1. **Clone or download this repository**
-   ```bash
-   git clone https://github.com/IamJamesRooke/phrase2bip39.git
-   cd phrase2bip39
-   ```
+### 📱 **Web Version (Zero Setup)**
+1. **Download or open `phrase2bip39.html`**
+2. **That's it!** Works in any browser on any device
 
-2. **Option A: Use the pre-built executable (easiest)**
-   - Download `phrase2BIP39.exe` from the releases
+### 💻 **Python Version**
+1. **Navigate to `python-version/` folder**
+2. **Option A: Use the pre-built executable**
+   - Run `phrase2BIP39.exe` (Windows only)
    - No Python installation required
-   - Just run the executable
 
 3. **Option B: Run from Python source**
-   - Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+   - Install Python dependencies: `pip install -r requirements.txt`
+   - Run: `python phrase2bip39.py`
 
-3. **Download Sparrow Wallet** (recommended Bitcoin wallet software)
-   - Go to: [sparrowwallet.com](https://sparrowwallet.com) ⚠️ **Check spelling - avoid fake sites!**
-   - Download and install for your operating system
-
-4. **Build your own executable (optional)**
+4. **Option C: Build your own executable**
    ```bash
    python build_exe.py
    ```
 
 ## 💻 Usage
 
-### Interactive Mode (Recommended)
+### 📱 **Web Version**
+1. **Open `phrase2bip39.html`** in any browser (Chrome, Safari, Firefox, etc.)
+2. **Enter your memorable phrase** in the input field
+3. **Click "Generate Bitcoin Wallets"**
+4. **Follow the step-by-step guide** that appears
+5. **Perfect for mobile demos** - share the HTML file with anyone!
+
+### 💻 **Python Version**
 ```bash
+cd python-version/
 python phrase2bip39.py
+# Follow the interactive prompts
 ```
-The script will prompt you to enter your memorable phrase and guide you through the entire wallet creation process step by step.
 
-### Pre-built Executable (No Python Required)
-```bash
-./phrase2BIP39.exe
-```
-Run the standalone executable that includes everything needed.
-
-### Example Session
-1. Run: `python phrase2bip39.py`
-2. Enter: `coffee shop on main street`
+### 🎯 **Example Session**
+1. Enter: `coffee shop on main street`
+2. Get your 24-word seed phrase
 3. Follow the 12-step guided process
 4. Create your three Bitcoin wallets in Sparrow
 

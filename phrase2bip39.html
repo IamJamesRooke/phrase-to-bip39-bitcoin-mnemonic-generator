@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phrase2BIP39 Bitcoin Seed Generator v1.0.1</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #000;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .header {
+            text-align: center;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .step {
+            border: 1px solid #333;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #111;
+        }
+        .step-title {
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            background-color: #333;
+            color: #00ff00;
+            border: 1px solid #555;
+            padding: 10px;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #004400;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 12px 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #006600;
+        }
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        .word-item {
+            background-color: #222;
+            padding: 8px;
+            border: 1px solid #444;
+        }
+        .warning {
+            color: #ff6600;
+            font-weight: bold;
+        }
+        .success {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .important {
+            color: #ffff00;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        .results {
+            background-color: #001100;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            .words-grid {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+    <!-- Include BIP39 JavaScript library -->
+    <script src="https://cdn.jsdelivr.net/npm/bip39@3.1.0/dist/bip39.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Phrase2BIP39 Bitcoin Seed Generator v1.0.1</h1>
+            <p>Convert any memorable phrase into Bitcoin wallet seeds</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title">🔑 Key Concept</div>
+            <p>This tool converts any memorable phrase into Bitcoin wallet seeds. The purpose: <span class="important">ONE phrase generates everything</span> you need - no need to memorize multiple passwords, seed phrases, or account numbers.</p>
+            <p><span class="important">KEY CONCEPT:</span> Same 24 words + different passphrases = completely different wallets!</p>
+            <p>It creates 3 wallets with different security levels:</p>
+            <ul>
+                <li>• Wallet 1: Same seed + NO passphrase</li>
+                <li>• Wallet 2: Same seed + 1-word passphrase</li>
+                <li>• Wallet 3: Same seed + 3-word passphrase + account</li>
+            </ul>
+            <p><span class="warning">Why 3 wallets? Security through deception.</span><br>
+            If anyone forces access, they find the first two and think that's everything. The real wealth stays hidden in wallet 3.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title">STEP 1: ENTER YOUR MEMORABLE PHRASE</div>
+            <p>Enter any phrase you can always remember:</p>
+            <p>Examples: 'my dog max loves treats'<br>
+                      'pizza friday movie night'<br>
+                      'coffee shop on main street'</p>
+            <input type="text" id="inputPhrase" placeholder="Enter your memorable phrase here..." />
+            <button onclick="generateWallets()">Generate Bitcoin Wallets</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <div class="step">
+                <div class="step-title">STEP 2: WRITE DOWN 24 WORDS</div>
+                <p><span class="warning">These words control all wallets. Write on paper!</span></p>
+                <p><span class="important">IMPORTANT:</span> All 3 wallets use these SAME 24 words. Only the passphrase changes to create different wallets.</p>
+                <div id="mnemonicWords" class="words-grid"></div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 3: DOWNLOAD SPARROW WALLET</div>
+                <p><span class="warning">⚠️  WARNING: Only use the official site!</span><br>
+                There are fake Sparrow sites that steal Bitcoin.</p>
+                <p>1. Go to: <strong>sparrowwallet.com</strong> (check spelling!)<br>
+                2. Download and install<br>
+                3. Open the program</p>
+                <p>This is free Bitcoin software for managing wallets.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 4: CREATE WALLET #1 (BASIC)</div>
+                <p>This wallet uses the 24 words + NO passphrase. Anyone with your phrase finds this first.</p>
+                <p>1. Sparrow: File > New Wallet<br>
+                2. Name: 'Bitcoin Wallet'<br>
+                3. Choose: New or Imported Software Wallet<br>
+                4. Select: Use 24 Words<br>
+                5. Import Existing Mnemonic<br>
+                6. Type your 24 words from Step 2<br>
+                7. Passphrase: <span class="important">LEAVE EMPTY</span><br>
+                8. Create Wallet</p>
+                <p>This wallet shows your basic holdings.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 5: CREATE WALLET #2 (DECOY)</div>
+                <p>This uses the SAME 24 words + 1-word passphrase. Smart attackers find this by trying BIP-39 words.</p>
+                <p>1. Sparrow: File > New Wallet<br>
+                2. Name: 'Savings'<br>
+                3. Choose: New or Imported Software Wallet<br>
+                4. Select: Use 24 Words<br>
+                5. Import Existing Mnemonic<br>
+                6. Type SAME 24 words from Step 2<br>
+                7. Passphrase: <span id="duressPass" class="important"></span><br>
+                8. Create Wallet</p>
+                <div class="results">
+                    <p><span class="important">SAVE WALLET #2 DETAILS:</span></p>
+                    <p>Passphrase: <span id="duressPassSave" class="success"></span></p>
+                    <p>This 1-word password is <span class="warning">INTENTIONALLY weak</span>. Smart attackers can find it by trying all 2,048 BIP-39 words. That's the point - they find this decoy wallet and think they're done!</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 6: CREATE WALLET #3 (MAIN VAULT)</div>
+                <p>This uses the SAME 24 words + 3-word passphrase + account number. <span class="important">Maximum security combination!</span></p>
+                <p>1. Sparrow: File > New Wallet<br>
+                2. Name: 'Main'<br>
+                3. Choose: New or Imported Software Wallet<br>
+                4. Select: Use 24 Words<br>
+                5. Import Existing Mnemonic<br>
+                6. Type SAME 24 words from Step 2<br>
+                7. Passphrase: <span id="realPass" class="important"></span><br>
+                8. Advanced Options<br>
+                9. Account: <span id="realAccount" class="important"></span> (this creates a different wallet path)<br>
+                10. Create Wallet</p>
+                <div class="results">
+                    <p><span class="important">SAVE WALLET #3 DETAILS:</span></p>
+                    <p>Passphrase: <span id="realPassSave" class="success"></span><br>
+                    Account: <span id="realAccountSave" class="success"></span></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 7: HOW TO USE WALLETS</div>
+                <p><span class="important">SEND BITCOIN:</span><br>
+                1. Open wallet > Send tab<br>
+                2. Paste destination address<br>
+                3. Enter amount<br>
+                4. Create Transaction > Broadcast</p>
+                
+                <p><span class="important">RECEIVE BITCOIN:</span><br>
+                1. Open wallet > Receive tab<br>
+                2. Copy the address<br>
+                3. Give address to sender</p>
+                
+                <p><span class="important">CHECK BALANCE:</span><br>
+                • Balance shows on main screen<br>
+                • Transactions take 10-60 minutes</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 8: SELLING BITCOIN & SECURITY</div>
+                <p><span class="important">SELLING BITCOIN FOR FIAT CURRENCY:</span></p>
+                
+                <p><span class="success">Option 1: Reputable Wallet Services</span><br>
+                • Strike: strike.me (US, El Salvador)<br>
+                • Wallet of Satoshi: walletofsatoshi.com<br>
+                • Send small test amount first<br>
+                • These services can convert to local currency</p>
+                
+                <p><span class="success">Option 2: P2P Exchanges</span><br>
+                • OrdenesP2P on Telegram (Colombian Pesos)<br>
+                • LocalBitcoins, Bisq, HodlHodl<br>
+                • Trade directly with other people<br>
+                • Always use escrow services<br>
+                • Meet in public places for cash trades</p>
+                
+                <p><span class="warning">⚠️  COMPUTER SECURITY WARNING:</span></p>
+                
+                <p><span class="warning">KEYLOGGER RISK:</span><br>
+                • Hackers can record every keystroke<br>
+                • They can see passwords as you type them<br>
+                • They can capture screenshots of your screen<br>
+                • Your computer may be compromised without you knowing</p>
+                
+                <p><span class="important">FOR HIGH-VALUE AMOUNTS:</span><br>
+                • Use ColdCard hardware wallet (coldcard.com)<br>
+                • Air-gapped device = never connects to internet<br>
+                • Sign transactions offline, transfer via SD card<br>
+                • Eliminates keylogger/malware risk completely<br>
+                • Worth the cost for serious Bitcoin storage</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">STEP 9: IF COMPROMISED</div>
+                <p><span class="warning">IF SOMEONE FORCES ACCESS:</span><br>
+                1. Give them ONLY your 24 words.<br>
+                2. They find Wallet #1 (basic, low funds)<br>
+                3. Smart ones find Wallet #2 (duress, more funds)<br>
+                4. They think that's everything and leave</p>
+                
+                <p><span class="warning">NEVER TELL THEM:</span><br>
+                • 3-word password: <span id="compromisePass"></span><br>
+                • Account number: <span id="compromiseAccount"></span><br>
+                • That there's a 3rd wallet with the real funds.</p>
+                
+                <p><span class="warning">⚠️  CRITICAL:</span> They must never even SUSPECT that Wallet #3 exists. Act like Wallet #2 is your main savings. Sell the performance!</p>
+                
+                <p>Wallet #3 has <span class="important">860+ BILLION password combinations</span> (8.6B passphrases × 100 accounts = 860B total). They'll never find it without the exact details!</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🎉 COMPLETE!</div>
+                <p class="success">You now have deterministic access to 3 Bitcoin wallets, all generated from your one memorable phrase. Your phrase is your master key to everything - keep it safe!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Version Information
+        const VERSION = "1.0.1";
+        const SCRIPT_NAME = "Phrase2BIP39 Bitcoin Seed Generator";
+        const NUMBER_OF_HASHES = 1000;
+
+        // Utility function to hash data multiple times
+        async function hashMultipleTimes(data, iterations) {
+            let result = CryptoJS.enc.Utf8.parse(data);
+            for (let i = 0; i < iterations; i++) {
+                result = CryptoJS.SHA256(result);
+            }
+            return result;
+        }
+
+        // Convert WordArray to Uint8Array
+        function wordArrayToUint8Array(wordArray) {
+            const words = wordArray.words;
+            const sigBytes = wordArray.sigBytes;
+            const u8 = new Uint8Array(sigBytes);
+            for (let i = 0; i < sigBytes; i++) {
+                u8[i] = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+            }
+            return u8;
+        }
+
+        // Convert Uint8Array to number (big endian)
+        function uint8ArrayToNumber(uint8Array, offset, length) {
+            let result = 0;
+            for (let i = 0; i < length; i++) {
+                result = (result << 8) | uint8Array[offset + i];
+            }
+            return result;
+        }
+
+        // Generate duress passphrase
+        async function generateDuressPassphrase(phrase) {
+            const duressHash = await hashMultipleTimes(phrase, 100);
+            const duressBytes = wordArrayToUint8Array(duressHash);
+            
+            const wordIndex = uint8ArrayToNumber(duressBytes, 0, 4) % bip39.wordlists.english.length;
+            return bip39.wordlists.english[wordIndex];
+        }
+
+        // Generate real wallet credentials
+        async function generateRealWalletCredentials(phrase) {
+            const realHash = await hashMultipleTimes(phrase, 2000);
+            const realBytes = wordArrayToUint8Array(realHash);
+            
+            const walletIndex = uint8ArrayToNumber(realBytes, 0, 4) % 100;
+            
+            const word1Index = uint8ArrayToNumber(realBytes, 4, 4) % bip39.wordlists.english.length;
+            const word2Index = uint8ArrayToNumber(realBytes, 8, 4) % bip39.wordlists.english.length;
+            const word3Index = uint8ArrayToNumber(realBytes, 12, 4) % bip39.wordlists.english.length;
+            
+            const word1 = bip39.wordlists.english[word1Index];
+            const word2 = bip39.wordlists.english[word2Index];
+            const word3 = bip39.wordlists.english[word3Index];
+            
+            return {
+                walletIndex: walletIndex,
+                passphrase: `${word1} ${word2} ${word3}`
+            };
+        }
+
+        // Generate mnemonic from phrase
+        async function generateMnemonic(phrase) {
+            const hash = await hashMultipleTimes(phrase, NUMBER_OF_HASHES);
+            const hashBytes = wordArrayToUint8Array(hash);
+            return bip39.entropyToMnemonic(Array.from(hashBytes).map(b => b.toString(16).padStart(2, '0')).join(''));
+        }
+
+        // Main function to generate all wallet information
+        async function generateWallets() {
+            const inputPhrase = document.getElementById('inputPhrase').value.trim();
+            
+            if (!inputPhrase) {
+                alert('Please enter a memorable phrase first!');
+                return;
+            }
+
+            try {
+                // Generate mnemonic
+                const mnemonic = await generateMnemonic(inputPhrase);
+                
+                // Generate duress passphrase
+                const duressPassphrase = await generateDuressPassphrase(inputPhrase);
+                
+                // Generate real wallet credentials
+                const realWallet = await generateRealWalletCredentials(inputPhrase);
+                
+                // Display results
+                displayResults(mnemonic, duressPassphrase, realWallet);
+                
+            } catch (error) {
+                console.error('Error generating wallets:', error);
+                alert('Error generating wallets. Please try again.');
+            }
+        }
+
+        // Display the generated wallet information
+        function displayResults(mnemonic, duressPassphrase, realWallet) {
+            // Show results section
+            document.getElementById('results').classList.remove('hidden');
+            
+            // Display mnemonic words
+            const words = mnemonic.toUpperCase().split(' ');
+            const wordsGrid = document.getElementById('mnemonicWords');
+            wordsGrid.innerHTML = '';
+            
+            words.forEach((word, index) => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word-item';
+                wordDiv.textContent = `${index + 1}. ${word}`;
+                wordsGrid.appendChild(wordDiv);
+            });
+            
+            // Display wallet details
+            document.getElementById('duressPass').textContent = duressPassphrase;
+            document.getElementById('duressPassSave').textContent = duressPassphrase;
+            document.getElementById('realPass').textContent = realWallet.passphrase;
+            document.getElementById('realPassSave').textContent = realWallet.passphrase;
+            document.getElementById('realAccount').textContent = realWallet.walletIndex;
+            document.getElementById('realAccountSave').textContent = realWallet.walletIndex;
+            document.getElementById('compromisePass').textContent = realWallet.passphrase;
+            document.getElementById('compromiseAccount').textContent = realWallet.walletIndex;
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Allow Enter key to generate wallets
+        document.getElementById('inputPhrase').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateWallets();
+            }
+        });
+    </script>
+</body>
+</html>
